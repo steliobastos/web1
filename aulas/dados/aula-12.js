@@ -62,10 +62,10 @@ window.AULA = {
      ],
      base:{html:'<nav>\n  <ul>\n    <li><a href="#">Início</a></li>\n\n  </ul>\n</nav>\n'},
      checks:[
-       {re:'<nav>[\\s\\S]*<ul>', msg:'nav envolvendo a lista'},
-       {re:'(<li>[\\s\\S]*){7}', msg:'Itens suficientes (menu + submenu)'},
+       {re:'<nav[^>]*>[\\s\\S]*<ul[^>]*>', msg:'nav envolvendo a lista'},
+       {re:'(<li[^>]*>[\\s\\S]*){7}', msg:'Itens suficientes (menu + submenu)'},
        {re:'(<a[^>]*href[\\s\\S]*){6}', msg:'Itens com link'},
-       {re:'<li>[\\s\\S]*<ul>[\\s\\S]*</ul>[\\s\\S]*</li>', msg:'Submenu aninhado dentro do li'}
+       {re:'<li[^>]*>[\\s\\S]*<ul[^>]*>[\\s\\S]*</ul>[\\s\\S]*</li>', msg:'Submenu aninhado dentro do li'}
      ],
      parabens:'Esse é o HTML por trás do menu de praticamente qualquer site que você abre.'},
 
@@ -81,12 +81,12 @@ window.AULA = {
      ],
      base:{html:'<h1></h1>\n\n<h2>Ingredientes</h2>\n<ul>\n\n</ul>\n\n<h2>Modo de preparo</h2>\n<ol>\n\n</ol>\n\n<h2>Ficha técnica</h2>\n<dl>\n\n</dl>\n'},
      checks:[
-       {re:'<h1>[^<]+</h1>', msg:'Título preenchido'},
-       {re:'<ul>[\\s\\S]*(<li>[\\s\\S]*){5}[\\s\\S]*</ul>', msg:'Cinco ingredientes'},
-       {re:'<ol>[\\s\\S]*(<li>[\\s\\S]*){4}[\\s\\S]*</ol>', msg:'Quatro passos'},
-       {re:'<dl>[\\s\\S]*<dt>[\\s\\S]*<dd>[\\s\\S]*</dl>', msg:'Ficha técnica com dt e dd'},
-       {re:'(<dt>[\\s\\S]*){3}', msg:'Três termos na ficha'},
-       {re:'<li>[\\s\\S]*<(ul|ol)>', msg:'Sublista aninhada'},
+       {re:'<h1[^>]*>[^<]+</h1>', msg:'Título preenchido'},
+       {re:'<ul[^>]*>[\\s\\S]*(<li[^>]*>[\\s\\S]*){5}[\\s\\S]*</ul>', msg:'Cinco ingredientes'},
+       {re:'<ol[^>]*>[\\s\\S]*(<li[^>]*>[\\s\\S]*){4}[\\s\\S]*</ol>', msg:'Quatro passos'},
+       {re:'<dl[^>]*>[\\s\\S]*<dt[^>]*>[\\s\\S]*<dd[^>]*>[\\s\\S]*</dl>', msg:'Ficha técnica com dt e dd'},
+       {re:'(<dt[^>]*>[\\s\\S]*){3}', msg:'Três termos na ficha'},
+       {re:'<li[^>]*>[\\s\\S]*<(ul|ol)>', msg:'Sublista aninhada'},
        {re:'<img[^>]*alt\\s*=\\s*["\\\'][^"\\\']{8,}', msg:'Imagem com alt'}
      ]},
 

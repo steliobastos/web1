@@ -55,7 +55,7 @@ window.AULA = {
      checks:[
        {re:'(href\\s*=\\s*["\\\']#[\\s\\S]*){3}', msg:'Três links de âncora'},
        {re:'(id\\s*=\\s*["\\\'][^"\\\']+["\\\'][\\s\\S]*){4}', msg:'Seções com id'},
-       {re:'(<h2>[\\s\\S]*){3}', msg:'Três títulos de seção'},
+       {re:'(<h2[^>]*>[\\s\\S]*){3}', msg:'Três títulos de seção'},
        {re:'href\\s*=\\s*["\\\']#topo', msg:'Link voltar ao topo'},
        {re:'target\\s*=\\s*["\\\']_blank', msg:'Link externo em nova aba'},
        {re:'rel\\s*=\\s*["\\\'][^"\\\']*noopener', msg:'rel="noopener" por segurança'}

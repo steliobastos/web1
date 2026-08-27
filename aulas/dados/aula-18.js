@@ -65,7 +65,7 @@ window.AULA = {
      checks:[
        {re:'<!DOCTYPE\\s+html>', msg:'DOCTYPE adicionado'},
        {re:'<meta[^>]*charset', msg:'charset declarado'},
-       {re:'<strong>[^<]*</strong>', msg:'strong fechado no lugar certo'},
+       {re:'<strong[^>]*>[^<]*</strong>', msg:'strong fechado no lugar certo'},
        {re:'<img[^>]*alt\\s*=', msg:'Imagem com alt'},
        {re:'<label[^>]*for\\s*=\\s*["\\\']nome', msg:'Label do nome ligado'},
        {re:'id\\s*=\\s*["\\\']nome["\\\'][^>]*name\\s*=|name\\s*=\\s*["\\\']nome', msg:'Campo nome com name'},
@@ -87,10 +87,10 @@ window.AULA = {
      base:{html:'<!DOCTYPE html>\n<html lang="pt-br">\n<head>\n  <meta charset="UTF-8">\n  <title>Minha turma</title>\n</head>\n<body>\n\n</body>\n</html>\n'},
      checks:[
        {re:'<header[\\s\\S]*<nav[\\s\\S]*<main[\\s\\S]*<footer', msg:'Estrutura semântica'},
-       {re:'<h1>[^<]+</h1>', msg:'h1 preenchido'},
-       {re:'(<h2>[\\s\\S]*){2}', msg:'Dois h2'},
-       {re:'<ul>[\\s\\S]*(<li>[\\s\\S]*){5}', msg:'Cinco colegas na lista'},
-       {re:'<table[\\s\\S]*<tr>[\\s\\S]*<td>', msg:'Tabela com dados'},
+       {re:'<h1[^>]*>[^<]+</h1>', msg:'h1 preenchido'},
+       {re:'(<h2[^>]*>[\\s\\S]*){2}', msg:'Dois h2'},
+       {re:'<ul[^>]*>[\\s\\S]*(<li[^>]*>[\\s\\S]*){5}', msg:'Cinco colegas na lista'},
+       {re:'<table[\\s\\S]*<tr[^>]*>[\\s\\S]*<td>', msg:'Tabela com dados'},
        {re:'<form[\\s\\S]*(<input[\\s\\S]*){3}', msg:'Formulário com 3 campos'},
        {re:'(<label[^>]*for\\s*=[\\s\\S]*){3}', msg:'Três labels ligados'},
        {re:'<img[^>]*alt\\s*=\\s*["\\\'][^"\\\']{6,}', msg:'Imagem com alt'},

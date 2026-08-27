@@ -65,7 +65,7 @@ window.AULA = {
        {re:'width\\s*=', msg:'Largura definida'},
        {re:'class\\s*=\\s*["\\\']foto', msg:'Divs com class="foto"'},
        {re:'id\\s*=\\s*["\\\'][^"\\\']+', msg:'Galeria com id'},
-       {re:'(<p>[\\s\\S]*){3}', msg:'Três legendas'}
+       {re:'(<p[^>]*>[\\s\\S]*){3}', msg:'Três legendas'}
      ]},
 
     {tipo:'codigo', xp:20, titulo:'Desafio 4 · Caça ao erro', linguagem:'html', abas:['html'],

@@ -64,14 +64,14 @@ window.AULA = {
      ],
      base:{html:'<h1></h1>\n\n<p></p>\n'},
      checks:[
-       {re:'<h1>[^<]+</h1>', msg:'h1 preenchido'},
-       {re:'(<h2>[\\s\\S]*){2}', msg:'Dois h2'},
-       {re:'(<p>[\\s\\S]*){4}', msg:'Quatro parágrafos'},
-       {re:'<strong>[^<]+</strong>', msg:'strong usado'},
-       {re:'<em>[^<]+</em>', msg:'em usado'},
+       {re:'<h1[^>]*>[^<]+</h1>', msg:'h1 preenchido'},
+       {re:'(<h2[^>]*>[\\s\\S]*){2}', msg:'Dois h2'},
+       {re:'(<p[^>]*>[\\s\\S]*){4}', msg:'Quatro parágrafos'},
+       {re:'<strong[^>]*>[^<]+</strong>', msg:'strong usado'},
+       {re:'<em[^>]*>[^<]+</em>', msg:'em usado'},
        {re:'<blockquote', msg:'Citação em bloco'},
        {re:'<abbr[^>]*title', msg:'Abreviação com title'},
-       {re:'<mark>', msg:'mark usado'}
+       {re:'<mark[^>]*>', msg:'mark usado'}
      ]},
 
     {tipo:'codigo', xp:20, titulo:'Desafio 4 · Preservando o código', linguagem:'html', abas:['html'],
@@ -85,9 +85,9 @@ window.AULA = {
      pista:'Para escrever <code class="inline">&lt;p&gt;</code> na tela sem ele virar uma tag, digite <code class="inline">&amp;lt;p&amp;gt;</code>.',
      base:{html:'<h2>Trecho comentado</h2>\n\n<pre><code>\n\n</code></pre>\n\n<p></p>\n'},
      checks:[
-       {re:'<pre>[\\s\\S]*<code>', msg:'pre com code dentro'},
-       {re:'<pre>[\\s\\S]{40,}</pre>', msg:'Tem código de verdade dentro'},
-       {re:'<p>[\\s\\S]*<code>[^<]+</code>[\\s\\S]*</p>', msg:'code em linha dentro do parágrafo'},
+       {re:'<pre[^>]*>[\\s\\S]*<code[^>]*>', msg:'pre com code dentro'},
+       {re:'<pre[^>]*>[\\s\\S]{40,}</pre>', msg:'Tem código de verdade dentro'},
+       {re:'<p[^>]*>[\\s\\S]*<code[^>]*>[^<]+</code>[\\s\\S]*</p>', msg:'code em linha dentro do parágrafo'},
        {re:'&lt;|&gt;', msg:'Usou entidades HTML (&amp;lt; / &amp;gt;)'}
      ]},
 

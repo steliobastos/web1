@@ -59,13 +59,13 @@ window.AULA = {
      base:{html:'<div class="topo">\n  <h1>Blog da Turma</h1>\n  <div class="menu">\n    <a href="#">Início</a> <a href="#">Posts</a> <a href="#">Sobre</a>\n  </div>\n</div>\n\n<div class="conteudo">\n  <div class="post">\n    <h2>Feira de Ciências</h2>\n    <p>Nosso projeto ganhou o primeiro lugar.</p>\n  </div>\n  <div class="post">\n    <h2>Visita técnica</h2>\n    <p>Fomos conhecer uma empresa de software.</p>\n  </div>\n</div>\n\n<div class="lateral">\n  <h3>Leia também</h3>\n  <p>Como montar seu primeiro site.</p>\n</div>\n\n<div class="rodape">\n  <p>IFCE Campus Horizonte — 2026</p>\n</div>\n'},
      checks:[
        {re:'<div', negar:true, msg:'Nenhuma div restante'},
-       {re:'<header>', msg:'header presente'},
-       {re:'<nav>', msg:'nav presente'},
-       {re:'<main>', msg:'main presente'},
-       {re:'<article>[\\s\\S]*<article>', msg:'Dois article'},
+       {re:'<header[^>]*>', msg:'header presente'},
+       {re:'<nav[^>]*>', msg:'nav presente'},
+       {re:'<main[^>]*>', msg:'main presente'},
+       {re:'<article[^>]*>[\\s\\S]*<article[^>]*>', msg:'Dois article'},
        {re:'<aside>', msg:'aside presente'},
-       {re:'<footer>', msg:'footer presente'},
-       {re:'<h1>[\\s\\S]*<h2>[\\s\\S]*<h2>[\\s\\S]*<h3>', msg:'Títulos preservados'}
+       {re:'<footer[^>]*>', msg:'footer presente'},
+       {re:'<h1[^>]*>[\\s\\S]*<h2[^>]*>[\\s\\S]*<h2[^>]*>[\\s\\S]*<h3[^>]*>', msg:'Títulos preservados'}
      ],
      parabens:'Zero div, mesmo visual, muito mais informação para máquinas e leitores de tela.'},
 
@@ -87,13 +87,13 @@ window.AULA = {
      ],
      base:{html:'<!DOCTYPE html>\n<html lang="pt-br">\n<head>\n  <meta charset="UTF-8">\n  <title>Evento</title>\n</head>\n<body>\n\n</body>\n</html>\n'},
      checks:[
-       {re:'<header>[\\s\\S]*<h1>[\\s\\S]*<nav>', msg:'header com h1 e nav'},
-       {re:'<main>', msg:'main presente'},
-       {re:'<section>[\\s\\S]*<section>', msg:'Duas sections'},
-       {re:'<section>[\\s\\S]*<h2>', msg:'Sections com título'},
-       {re:'<article>', msg:'article presente'},
+       {re:'<header[^>]*>[\\s\\S]*<h1[^>]*>[\\s\\S]*<nav[^>]*>', msg:'header com h1 e nav'},
+       {re:'<main[^>]*>', msg:'main presente'},
+       {re:'<section[^>]*>[\\s\\S]*<section[^>]*>', msg:'Duas sections'},
+       {re:'<section[^>]*>[\\s\\S]*<h2[^>]*>', msg:'Sections com título'},
+       {re:'<article[^>]*>', msg:'article presente'},
        {re:'<aside>', msg:'aside presente'},
-       {re:'<footer>', msg:'footer presente'},
+       {re:'<footer[^>]*>', msg:'footer presente'},
        {re:'<div', negar:true, msg:'Nenhuma div'}
      ]},
 

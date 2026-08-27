@@ -59,8 +59,8 @@ window.AULA = {
      base:{html:'<h2>Inscrição — Semana de Tecnologia 2026</h2>\n<p><small>Campos marcados com * são obrigatórios.</small></p>\n\n<form method="post">\n\n  <fieldset>\n    <legend>Identificação</legend>\n\n    <p>\n      <label for="nome">Nome completo *</label><br>\n      <input type="text" id="nome" name="nome" required minlength="5" autocomplete="name">\n    </p>\n\n  </fieldset>\n\n  <!-- Contato -->\n\n  <!-- Escolaridade -->\n\n  <!-- Interesses -->\n\n  <button type="submit">Confirmar inscrição</button>\n</form>\n'},
      checks:[
        {re:'<form[^>]*method\\s*=\\s*["\\\']post', msg:'form com POST'},
-       {re:'(<fieldset>[\\s\\S]*){4}', msg:'Quatro fieldsets'},
-       {re:'(<legend>[^<]+</legend>[\\s\\S]*){4}', msg:'Quatro legends preenchidas'},
+       {re:'(<fieldset[^>]*>[\\s\\S]*){4}', msg:'Quatro fieldsets'},
+       {re:'(<legend[^>]*>[^<]+</legend>[\\s\\S]*){4}', msg:'Quatro legends preenchidas'},
        {re:'minlength\\s*=\\s*["\\\']?5', msg:'Nome com minlength'},
        {re:'autocomplete\\s*=', msg:'autocomplete usado'},
        {re:'type\\s*=\\s*["\\\']date', msg:'Data de nascimento'},

@@ -54,8 +54,8 @@ window.AULA = {
      ],
      base:{html:'<h2>Matrícula nas oficinas</h2>\n\n<form>\n\n  <fieldset>\n    <legend>Dados pessoais</legend>\n\n  </fieldset>\n\n  <!-- segundo fieldset -->\n\n  <button type="submit">Matricular</button>\n</form>\n'},
      checks:[
-       {re:'(<fieldset>[\\s\\S]*){2}', msg:'Dois fieldsets'},
-       {re:'(<legend>[^<]+</legend>[\\s\\S]*){2}', msg:'Duas legends preenchidas'},
+       {re:'(<fieldset[^>]*>[\\s\\S]*){2}', msg:'Dois fieldsets'},
+       {re:'(<legend[^>]*>[^<]+</legend>[\\s\\S]*){2}', msg:'Duas legends preenchidas'},
        {re:'<select[\\s\\S]*(<option[\\s\\S]*){4}', msg:'Select com 4 opções'},
        {re:'(type\\s*=\\s*["\\\']radio[\\s\\S]*){3}', msg:'Três rádios'},
        {re:'type\\s*=\\s*["\\\']radio[^>]*name\\s*=\\s*["\\\'](\\w+)["\\\'][\\s\\S]*type\\s*=\\s*["\\\']radio[^>]*name\\s*=\\s*["\\\']\\1["\\\']', msg:'Rádios com o mesmo name'},

@@ -60,11 +60,11 @@ window.AULA = {
      ],
      base:{html:'<h1>Meu site</h1>\n\n<h1>Sobre mim</h1>\n\n<p>Ola, eu sou <strong>estudante</p></strong>\n\n<h4>Meus hobbies</h4>\n\n<p>Games, musica e programacao.\n\n<p>Contato: <em>meu@email.com</p>\n'},
      checks:[
-       {re:'<h1>[\\s\\S]*<h1>', negar:true, msg:'Só um h1 na página'},
-       {re:'<strong>[^<]*</strong>', msg:'strong fechado no lugar certo'},
-       {re:'<h2>', msg:'Usou h2 em vez de pular para h4'},
-       {re:'<h4>', negar:true, msg:'Removeu o h4 fora de hierarquia'},
-       {re:'<em>[^<]*</em>', msg:'em fechado corretamente'},
+       {re:'<h1[^>]*>[\\s\\S]*<h1[^>]*>', negar:true, msg:'Só um h1 na página'},
+       {re:'<strong[^>]*>[^<]*</strong>', msg:'strong fechado no lugar certo'},
+       {re:'<h2[^>]*>', msg:'Usou h2 em vez de pular para h4'},
+       {re:'<h4[^>]*>', negar:true, msg:'Removeu o h4 fora de hierarquia'},
+       {re:'<em[^>]*>[^<]*</em>', msg:'em fechado corretamente'},
        {re:'</p>[\\s\\S]*</p>[\\s\\S]*</p>', msg:'Todos os parágrafos fechados'}
      ],
      parabens:'Esse tipo de erro é o que mais quebra layout. Saber achar já te coloca à frente.'},
@@ -81,13 +81,13 @@ window.AULA = {
      ],
      base:{html:'<h1></h1>\n\n'},
      checks:[
-       {re:'<h1>[^<]+</h1>', msg:'h1 preenchido'},
-       {re:'<h2>[^<]*[Ii]ngredientes', msg:'h2 de Ingredientes'},
-       {re:'<h2>[^<]*[Mm]odo', msg:'h2 de Modo de preparo'},
-       {re:'<p>[\\s\\S]*<p>[\\s\\S]*<p>', msg:'Três parágrafos'},
+       {re:'<h1[^>]*>[^<]+</h1>', msg:'h1 preenchido'},
+       {re:'<h2[^>]*>[^<]*[Ii]ngredientes', msg:'h2 de Ingredientes'},
+       {re:'<h2[^>]*>[^<]*[Mm]odo', msg:'h2 de Modo de preparo'},
+       {re:'<p[^>]*>[\\s\\S]*<p[^>]*>[\\s\\S]*<p[^>]*>', msg:'Três parágrafos'},
        {re:'<hr\\s*/?>', msg:'Separador hr'},
-       {re:'<strong>', msg:'Usou strong'},
-       {re:'<em>', msg:'Usou em'},
+       {re:'<strong[^>]*>', msg:'Usou strong'},
+       {re:'<em[^>]*>', msg:'Usou em'},
        {re:'<br\\s*/?>', msg:'Usou br'}
      ]},
 

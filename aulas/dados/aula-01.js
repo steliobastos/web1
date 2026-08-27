@@ -66,8 +66,8 @@ window.AULA = {
      pista:'Link: <code class="inline">&lt;a href="https://www.ifce.edu.br"&gt;IFCE&lt;/a&gt;</code>',
      base:{html:'<h1>Seu nome aqui</h1>\n\n<p>Escreva algo sobre voce.</p>\n\n<!-- adicione o segundo paragrafo -->\n\n\n<!-- adicione o link -->\n\n'},
      checks:[
-       {re:'<h1>\\s*(?!Seu nome aqui)\\S', msg:'Trocou o título pelo seu nome'},
-       {re:'<p>[\\s\\S]*<p>', msg:'Tem pelo menos dois parágrafos'},
+       {re:'<h1[^>]*>\\s*(?!Seu nome aqui)\\S', msg:'Trocou o título pelo seu nome'},
+       {re:'<p[^>]*>[\\s\\S]*<p[^>]*>', msg:'Tem pelo menos dois parágrafos'},
        {re:'<a\\s[^>]*href\\s*=', msg:'Adicionou um link'},
        {re:'href\\s*=\\s*["\\\']https?://', msg:'O link aponta para um endereço completo'}
      ],

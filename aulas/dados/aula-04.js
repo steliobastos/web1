@@ -55,9 +55,9 @@ window.AULA = {
        {re:'<html[^>]*lang', msg:'html com lang'},
        {re:'<meta[^>]*charset', msg:'charset declarado'},
        {re:'<title>[^<]*WEB\\s*I', msg:'title com "WEB I"'},
-       {re:'<h1>[^<]+</h1>', msg:'h1 preenchido'},
-       {re:'<h2>[^<]+</h2>', msg:'h2 preenchido'},
-       {re:'<p>[\\s\\S]*<p>', msg:'Dois parágrafos'},
+       {re:'<h1[^>]*>[^<]+</h1>', msg:'h1 preenchido'},
+       {re:'<h2[^>]*>[^<]+</h2>', msg:'h2 preenchido'},
+       {re:'<p[^>]*>[\\s\\S]*<p[^>]*>', msg:'Dois parágrafos'},
        {re:'<!--[\\s\\S]*-->', msg:'Tem comentário no código'}
      ],
      parabens:'Guarde este arquivo como index.html na pasta da disciplina.'},

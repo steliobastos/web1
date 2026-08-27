@@ -17,6 +17,7 @@
   ];
   if (prof) {
     itens.push({ id: 'guia',      txt: 'Guia de regência', href: base + 'professor/guia.html' });
+    itens.push({ id: 'gabarito',  txt: 'Gabarito',         href: base + 'professor/gabarito.html' });
     itens.push({ id: 'automacao', txt: 'Automação',        href: base + 'automacao/instalacao.html' });
     itens.push({ id: 'limpar',    txt: 'Limpar',           href: base + 'limpar.html' });
   }

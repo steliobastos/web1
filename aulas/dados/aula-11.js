@@ -54,9 +54,9 @@ window.AULA = {
      base:{html:'<table border="1">\n  <caption></caption>\n  <thead>\n    <tr>\n      <th scope="col">Horário</th>\n      <!-- dias da semana -->\n    </tr>\n  </thead>\n  <tbody>\n\n  </tbody>\n</table>\n'},
      checks:[
        {re:'<caption>[^<]+</caption>', msg:'Caption preenchido'},
-       {re:'<thead>[\\s\\S]*scope\\s*=\\s*["\\\']col', msg:'Cabeçalhos de coluna com scope'},
+       {re:'<thead[^>]*>[\\s\\S]*scope\\s*=\\s*["\\\']col', msg:'Cabeçalhos de coluna com scope'},
        {re:'(<th[^>]*scope\\s*=\\s*["\\\']col[\\s\\S]*){4}', msg:'Pelo menos 4 colunas'},
-       {re:'(<tr>[\\s\\S]*){5}', msg:'Pelo menos 4 linhas de dados'},
+       {re:'(<tr[^>]*>[\\s\\S]*){5}', msg:'Pelo menos 4 linhas de dados'},
        {re:'scope\\s*=\\s*["\\\']row', msg:'Cabeçalhos de linha com scope="row"'},
        {re:'(colspan|rowspan)\\s*=', msg:'Célula mesclada'}
      ]},
@@ -72,12 +72,12 @@ window.AULA = {
      ],
      base:{html:'<table border="1">\n\n</table>\n'},
      checks:[
-       {re:'<thead>', msg:'thead presente'},
-       {re:'<tbody>', msg:'tbody presente'},
-       {re:'<tfoot>', msg:'tfoot presente'},
+       {re:'<thead[^>]*>', msg:'thead presente'},
+       {re:'<tbody[^>]*>', msg:'tbody presente'},
+       {re:'<tfoot[^>]*>', msg:'tfoot presente'},
        {re:'<caption>[^<]+', msg:'Caption preenchido'},
-       {re:'(<tr>[\\s\\S]*){6}', msg:'Linhas suficientes'},
-       {re:'<tfoot>[\\s\\S]*colspan', msg:'colspan usado no rodapé'}
+       {re:'(<tr[^>]*>[\\s\\S]*){6}', msg:'Linhas suficientes'},
+       {re:'<tfoot[^>]*>[\\s\\S]*colspan', msg:'colspan usado no rodapé'}
      ]},
 
     {tipo:'texto', xp:6, titulo:'Fecho', minimo:35, linhas:3,

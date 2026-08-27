@@ -49,7 +49,7 @@ window.AULA = {
        {re:'i\\s*<=?\\s*10', msg:'Vai até 10'},
        {re:'console\\.log', msg:'Mostrou no console'},
        {re:'(innerHTML|appendChild)', msg:'Escreveu na página'},
-       {re:'<li>|createElement\\s*\\(\\s*["\\\']li', msg:'Criou itens de lista'}
+       {re:'<li[^>]*>|createElement\\s*\\(\\s*["\\\']li', msg:'Criou itens de lista'}
      ]},
 
     {tipo:'quiz', xp:12, titulo:'for ou while?',

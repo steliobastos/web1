@@ -59,12 +59,12 @@ window.AULA = {
      ],
      base:{html:'<h2></h2>\n\n<figure>\n  <img src="https://picsum.photos/400/300?random=1" alt="">\n  <figcaption></figcaption>\n</figure>\n\n<!-- repita mais 3 vezes -->\n'},
      checks:[
-       {re:'(<figure>[\\s\\S]*){4}', msg:'Quatro figures'},
-       {re:'(<figcaption>[^<]+</figcaption>[\\s\\S]*){4}', msg:'Quatro legendas preenchidas'},
+       {re:'(<figure[^>]*>[\\s\\S]*){4}', msg:'Quatro figures'},
+       {re:'(<figcaption[^>]*>[^<]+</figcaption>[\\s\\S]*){4}', msg:'Quatro legendas preenchidas'},
        {re:'alt\\s*=\\s*["\\\'][^"\\\']{10,}', msg:'alt descritivo'},
        {re:'width\\s*=[\\s\\S]*height\\s*=', msg:'width e height declarados'},
        {re:'loading\\s*=\\s*["\\\']lazy[\\s\\S]*loading\\s*=\\s*["\\\']lazy', msg:'lazy em pelo menos duas'},
-       {re:'<h2>[^<]+</h2>', msg:'h2 preenchido'}
+       {re:'<h2[^>]*>[^<]+</h2>', msg:'h2 preenchido'}
      ]},
 
     {tipo:'codigo', xp:22, titulo:'Desafio 4 · Cartão de perfil', linguagem:'html', abas:['html'],
@@ -80,8 +80,8 @@ window.AULA = {
      checks:[
        {re:'class\\s*=\\s*["\\\']perfil', msg:'div.perfil presente'},
        {re:'<img[^>]*alt\\s*=\\s*["\\\'][^"\\\']{8,}', msg:'Avatar com alt'},
-       {re:'<h3>[^<]+</h3>', msg:'Nome em h3'},
-       {re:'<p>[^<]{15,}</p>', msg:'Descrição preenchida'},
+       {re:'<h3[^>]*>[^<]+</h3>', msg:'Nome em h3'},
+       {re:'<p[^>]*>[^<]{15,}</p>', msg:'Descrição preenchida'},
        {re:'<a[^>]*href\\s*=\\s*["\\\']https?://', msg:'Link externo'},
        {re:'rel\\s*=\\s*["\\\'][^"\\\']*noopener', msg:'rel noopener'}
      ]},

@@ -77,7 +77,7 @@ window.AULA = {
        {re:'<meta[^>]*charset\\s*=\\s*["\\\']?utf-8', msg:'Charset UTF-8 declarado'},
        {re:'<meta[^>]*viewport', msg:'Meta viewport presente'},
        {re:'<title>[^<]+</title>', msg:'Title preenchido'},
-       {re:'<body>[\\s\\S]*<h1>', msg:'Body com um h1'}
+       {re:'<body>[\\s\\S]*<h1[^>]*>', msg:'Body com um h1'}
      ],
      parabens:'Decorou. A partir de agora, ! + Tab faz isso em 1 segundo — mas você já sabe o que cada linha significa.'},
 
