@@ -638,18 +638,38 @@
         }
       })
       .catch(function () {
-        bt.disabled = false; bt.textContent = '📤 Tentar enviar de novo';
-        mostrarCodigo(painel, p, 'Não consegui falar com a planilha (internet ou link fora do ar).');
+        // Navegadores com bloqueio agressivo (Brave, Firefox estrito, extensões de
+        // privacidade) barram a LEITURA da resposta, mas o envio em si costuma passar.
+        // Reenviamos em modo opaco e avisamos que não deu para confirmar.
+        fetch(url, {
+          method: 'POST', mode: 'no-cors', redirect: 'follow',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(p)
+        }).then(function () {
+          bt.disabled = false; bt.textContent = '📤 Enviar novamente';
+          retorno(painel, 'meio',
+            '<strong>Provavelmente enviado — mas não consegui confirmar.</strong>' +
+            '<div style="margin-top:6px">Seu navegador bloqueou a resposta da planilha. Isso acontece no <b>Brave</b>, no Firefox em modo estrito e com extensões de bloqueio ligadas. A entrega quase sempre chega assim mesmo.</div>' +
+            '<div style="margin-top:6px">Para ter certeza, abra esta página no <b>Chrome</b> ou no <b>Edge</b> e envie de novo — reenviar não duplica nada, vale sempre a última entrega. Se não der, mande o código abaixo para o professor.</div>' +
+            codigoHtml(p));
+        }).catch(function () {
+          bt.disabled = false; bt.textContent = '📤 Tentar enviar de novo';
+          mostrarCodigo(painel, p, 'Não consegui falar com a planilha (sem internet ou link fora do ar).');
+        });
       });
   }
 
-  function mostrarCodigo(painel, p, motivo) {
+  function codigoHtml(p) {
     var b64 = btoa(unescape(encodeURIComponent(JSON.stringify(p))));
+    return '<div class="codigo-entrega" id="cod-entrega">' + b64 + '</div>' +
+      '<button class="btn suave" style="margin-top:10px" onclick="navigator.clipboard.writeText(document.getElementById(\'cod-entrega\').textContent);this.textContent=\'Copiado! ✓\'">📋 Copiar código</button>';
+  }
+
+  function mostrarCodigo(painel, p, motivo) {
     retorno(painel, 'meio',
       '<strong>' + motivo + '</strong>' +
       '<div style="margin-top:8px">Copie o <b>código de entrega</b> abaixo e mande para o professor (chat da turma, e-mail ou pendrive). Ele consegue importar direto na planilha.</div>' +
-      '<div class="codigo-entrega" id="cod-entrega">' + b64 + '</div>' +
-      '<button class="btn suave" style="margin-top:10px" onclick="navigator.clipboard.writeText(document.getElementById(\'cod-entrega\').textContent);this.textContent=\'Copiado! ✓\'">📋 Copiar código</button>');
+      codigoHtml(p));
   }
 
   /* ------------------------- render ------------------------- */
