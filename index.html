@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WEB I — Missões</title>
+<link rel="stylesheet" href="assets/estilo.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🚀</text></svg>">
+<style>
+  .grade{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(288px,1fr))}
+  .missao{
+    position:relative;display:block;text-decoration:none;color:inherit;background:var(--surface);
+    border:1px solid var(--linha);border-left:5px solid var(--azul);border-radius:15px;padding:18px 20px;
+    box-shadow:var(--sombra);transition:transform .22s,box-shadow .22s,border-color .22s;
+  }
+  .missao:hover{transform:translateY(-4px);box-shadow:var(--sombra-alta)}
+  .missao .n{font-size:.74rem;font-weight:800;letter-spacing:.06em;color:var(--texto-fraco);text-transform:uppercase}
+  .missao h3{margin:5px 0 8px;font-size:1.02rem;line-height:1.35}
+  .missao .meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:11px}
+  .missao.un-I{border-left-color:var(--ciano)}
+  .missao.un-II{border-left-color:var(--azul)}
+  .missao.un-III{border-left-color:var(--roxo)}
+  .missao.un-IV{border-left-color:var(--verde)}
+  .missao.av{border-left-color:var(--rosa);background:linear-gradient(135deg,#fff,#fff7fa)}
+  .missao.hoje{box-shadow:0 0 0 3px #cddcff,var(--sombra-alta)}
+  .missao .barra{margin-top:12px;height:7px}
+  .missao .prog{font-size:.74rem;color:var(--texto-fraco);margin-top:5px;font-weight:600}
+  .filtros{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 22px}
+  .filtros button{
+    border:1px solid var(--linha);background:var(--surface);color:var(--texto-fraco);
+    padding:7px 15px;border-radius:999px;font:700 .84rem var(--fonte);cursor:pointer;transition:all .2s;
+  }
+  .filtros button:hover{border-color:#b9cdfb;color:var(--azul)}
+  .filtros button.ativo{background:var(--azul);border-color:var(--azul);color:#fff}
+  .grupo-tit{
+    margin:34px 0 14px;display:flex;align-items:center;gap:12px;font-size:.82rem;font-weight:800;
+    letter-spacing:.08em;text-transform:uppercase;color:var(--texto-fraco);
+  }
+  .grupo-tit::after{content:'';flex:1;height:1px;background:var(--linha)}
+  .painel{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin:0 0 26px}
+  .painel div{background:var(--surface);border:1px solid var(--linha);border-radius:14px;padding:15px 18px;text-align:center}
+  .painel b{display:block;font-size:1.6rem;color:var(--azul);line-height:1.2}
+  .painel span{font-size:.73rem;color:var(--texto-fraco);text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+</style>
+</head>
+<body data-base="" data-pagina="missoes">
+<div class="envelope">
+
+  <div class="capa">
+    <div class="capa-topo">
+      <span class="selo roxo">II1LDW</span>
+      <span class="selo cinza">80h · anual</span>
+      <span class="selo verde">Sextas, 09:45–11:45</span>
+      <span class="selo ciano">IFCE Campus Horizonte</span>
+    </div>
+    <h1>Linguagem e Desenvolvimento Web I</h1>
+    <p class="resumo">35 missões práticas de HTML, CSS e JavaScript. Cada sexta-feira, uma missão: pouco papo, muito código. Complete os desafios, ganhe XP e envie suas respostas no fim da página.</p>
+  </div>
+
+  <div class="painel" id="painel"></div>
+
+  <div class="filtros" id="filtros">
+    <button class="ativo" data-f="todas">Todas</button>
+    <button data-f="I">Unidade I · Conceitos</button>
+    <button data-f="II">Unidade II · HTML</button>
+    <button data-f="III">Unidade III · CSS</button>
+    <button data-f="IV">Unidade IV · JavaScript</button>
+    <button data-f="av">★ Avaliativas</button>
+    <button data-f="proximas">Próximas</button>
+  </div>
+
+  <div id="lista"></div>
+
+  <p class="centro mudo pequeno" style="margin-top:34px" id="rodape"></p>
+</div>
+
+<script src="assets/config.js"></script>
+<script src="assets/nav.js"></script>
+<script src="assets/curso.js"></script>
+<script>
+(function () {
+  var C = window.CURSO, CFG = window.CONFIG_WEB1 || {};
+  var hoje = new Date().toISOString().slice(0, 10);
+
+  function progresso(id) {
+    try {
+      var d = JSON.parse(localStorage.getItem('web1:' + id) || 'null');
+      if (!d || !d.estado) return null;
+      var xp = 0, n = 0;
+      for (var k in d.estado) { if (d.estado[k]) { xp += d.estado[k].xp || 0; n++; } }
+      return { xp: xp, n: n };
+    } catch (e) { return null; }
+  }
+
+  function cartao(a) {
+    var feito = progresso(a.id);
+    var cls = 'missao un-' + a.un.replace('-', '') + (a.av ? ' av' : '');
+    var prox = C.aulas.filter(function (x) { return x.data >= hoje; })[0];
+    if (prox && prox.id === a.id) cls += ' hoje';
+    var d = new Date(a.data + 'T12:00:00');
+    var dataFmt = ('0' + d.getDate()).slice(-2) + '/' + ('0' + (d.getMonth() + 1)).slice(-2);
+    var passou = a.data < hoje;
+
+    var h = '<a class="' + cls + '" href="aulas/aula-' + ('0' + a.n).slice(-2) + '.html">';
+    h += '<div class="n">Missão ' + ('0' + a.n).slice(-2) + ' · ' + dataFmt + '</div>';
+    h += '<h3>' + a.tit + '</h3>';
+    h += '<div class="meta">';
+    h += '<span class="selo ' + ({I:'ciano',II:'',III:'roxo',IV:'verde'}[a.un] || 'cinza') + '">Un. ' + a.un + '</span>';
+    h += '<span class="selo cinza">PUD ' + a.pud + '</span>';
+    h += '<span class="selo ambar">' + a.rod + '</span>';
+    if (a.av) h += '<span class="selo rosa">★ avaliativa</span>';
+    if (prox && prox.id === a.id) h += '<span class="selo ambar">próxima aula</span>';
+    else if (passou) h += '<span class="selo verde">realizada</span>';
+    h += '</div>';
+    if (feito) {
+      h += '<div class="barra"><i style="width:100%"></i></div>';
+      h += '<div class="prog">✓ ' + feito.n + ' desafios · ' + feito.xp + ' XP acumulados</div>';
+    }
+    h += '</a>';
+    return h;
+  }
+
+  function render(filtro) {
+    var aulas = C.aulas.filter(function (a) {
+      if (filtro === 'todas') return true;
+      if (filtro === 'av') return !!a.av;
+      if (filtro === 'proximas') return a.data >= hoje;
+      return a.un.indexOf(filtro) >= 0;
+    });
+    var grupos = {}, ordem = [];
+    aulas.forEach(function (a) {
+      var g = a.sem + ' · Etapa ' + a.etapa;
+      if (!grupos[g]) { grupos[g] = []; ordem.push(g); }
+      grupos[g].push(a);
+    });
+    var h = '';
+    ordem.forEach(function (g) {
+      var rodG = grupos[g][0].rod;
+      h += '<div class="grupo-tit">' + g + ' <span class="mudo" style="font-weight:600;letter-spacing:0;text-transform:none">— etapa ' + rodG + ' do ROD, peso ' + C.pesosROD[rodG] + ' (' + grupos[g].length + (grupos[g].length === 1 ? ' missão' : ' missões') + ')</span></div>';
+      h += '<div class="grade">' + grupos[g].map(cartao).join('') + '</div>';
+    });
+    document.getElementById('lista').innerHTML = h || '<p class="mudo">Nenhuma missão neste filtro.</p>';
+  }
+
+  // painel
+  var feitas = C.aulas.filter(function (a) { return progresso(a.id); }).length;
+  var xpTotal = C.aulas.reduce(function (s, a) { var p = progresso(a.id); return s + (p ? p.xp : 0); }, 0);
+  var restantes = C.aulas.filter(function (a) { return a.data >= hoje; }).length;
+  document.getElementById('painel').innerHTML =
+    '<div><b>' + C.aulas.length + '</b><span>missões no ano</span></div>' +
+    '<div><b>' + feitas + '</b><span>com progresso seu</span></div>' +
+    '<div><b>' + xpTotal + '</b><span>XP acumulado</span></div>' +
+    '<div><b>' + restantes + '</b><span>encontros restantes</span></div>';
+
+  document.getElementById('filtros').addEventListener('click', function (e) {
+    if (e.target.tagName !== 'BUTTON') return;
+    this.querySelectorAll('button').forEach(function (b) { b.classList.remove('ativo'); });
+    e.target.classList.add('ativo');
+    render(e.target.dataset.f);
+  });
+
+  document.getElementById('rodape').textContent =
+    (CFG.CAMPUS || '') + ' · ' + C.curso + ' · ' + (CFG.PROFESSOR || '');
+
+  render('todas');
+})();
+</script>
+</body>
+</html>

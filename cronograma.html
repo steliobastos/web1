@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cronograma 2026 — WEB I</title>
+<link rel="stylesheet" href="assets/estilo.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>📅</text></svg>">
+<style>
+  .linha-tempo{position:relative;padding-left:34px;margin-top:8px}
+  .linha-tempo::before{content:'';position:absolute;left:11px;top:6px;bottom:6px;width:2px;background:linear-gradient(180deg,#cddcff,#ddd2ff,#bfe9d2)}
+  .evento{position:relative;margin-bottom:13px;animation:surge .4s both}
+  .evento::before{
+    content:'';position:absolute;left:-28px;top:17px;width:11px;height:11px;border-radius:50%;
+    background:#fff;border:2.5px solid var(--azul);
+  }
+  .evento.marco::before{border-color:var(--ambar);background:var(--ambar-claro)}
+  .evento.av::before{border-color:var(--rosa);background:var(--rosa-claro);width:15px;height:15px;left:-30px;top:15px}
+  .evento.passada::before{background:var(--verde);border-color:var(--verde)}
+  .evento.hoje::before{border-color:var(--ambar);animation:piscar 1.4s infinite;width:15px;height:15px;left:-30px;top:15px}
+  .cx{
+    background:var(--surface);border:1px solid var(--linha);border-radius:13px;padding:14px 18px;
+    display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;box-shadow:var(--sombra);
+  }
+  .cx.passada{opacity:.72}
+  .cx.marco{background:var(--ambar-claro);border-color:#f6dfb4}
+  .cx.av{background:linear-gradient(135deg,#fff,#fff7fa);border-color:#fcd0e0}
+  .cx.hoje{border-color:var(--ambar);box-shadow:0 0 0 3px #ffe8bf,var(--sombra)}
+  .cx .dia{
+    flex:0 0 auto;text-align:center;min-width:56px;background:var(--azul-claro);border:1px solid #cddcff;
+    border-radius:11px;padding:6px 8px;
+  }
+  .cx.marco .dia{background:#fff;border-color:#f6dfb4}
+  .cx.av .dia{background:var(--rosa-claro);border-color:#fcd0e0}
+  .cx .dia b{display:block;font-size:1.25rem;line-height:1.1;color:#1e40af}
+  .cx.av .dia b{color:#a01e50}
+  .cx .dia span{font-size:.65rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--texto-fraco)}
+  .cx .corpo{flex:1;min-width:210px}
+  .cx .corpo h3{margin:0 0 4px;font-size:1rem;line-height:1.35}
+  .cx .corpo h3 a{text-decoration:none;color:inherit}
+  .cx .corpo h3 a:hover{color:var(--azul)}
+  .cx .corpo .meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+  .resumo-sem{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));margin-bottom:24px}
+  @media print{.hud,.btn{display:none}.cx{break-inside:avoid}}
+</style>
+</head>
+<body data-base="" data-pagina="cronograma">
+<div class="envelope">
+
+  <div class="capa">
+    <div class="capa-topo">
+      <span class="selo roxo">Cronograma</span>
+      <span class="selo cinza">Ano letivo 2026</span>
+      <span class="selo verde">35 encontros</span>
+    </div>
+    <h1>Cronograma anual · WEB I</h1>
+    <p class="resumo">Sextas-feiras, 09:45 às 11:45. Datas conferidas contra o Calendário Letivo 2026 do IFCE Campus Horizonte — feriados e recesso já descontados.</p>
+    <div class="fila" style="margin-top:16px">
+      <button class="btn suave" onclick="window.print()">🖨️ Imprimir</button>
+    </div>
+  </div>
+
+  <div class="resumo-sem" id="resumo"></div>
+
+  <div class="linha-tempo" id="linha"></div>
+
+  <p class="centro mudo pequeno" style="margin-top:30px" id="rodape"></p>
+</div>
+
+<script src="assets/config.js"></script>
+<script src="assets/nav.js"></script>
+<script src="assets/curso.js"></script>
+<script>
+(function () {
+  var C = window.CURSO, CFG = window.CONFIG_WEB1 || {};
+  var hoje = new Date().toISOString().slice(0, 10);
+  var MES = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+  var prox = C.aulas.filter(function (a) { return a.data >= hoje; })[0];
+
+  var itens = [];
+  C.aulas.forEach(function (a) { itens.push({ data: a.data, tipo: 'aula', a: a }); });
+  C.marcos.forEach(function (m) { itens.push({ data: m.data, tipo: 'marco', m: m }); });
+  itens.sort(function (x, y) { return x.data < y.data ? -1 : (x.data > y.data ? 1 : (x.tipo === 'marco' ? -1 : 1)); });
+
+  var h = '';
+  itens.forEach(function (it) {
+    var d = new Date(it.data + 'T12:00:00');
+    var dia = ('0' + d.getDate()).slice(-2), mes = MES[d.getMonth()];
+    var passada = it.data < hoje;
+
+    if (it.tipo === 'marco') {
+      h += '<div class="evento marco"><div class="cx marco' + (passada ? ' passada' : '') + '">';
+      h += '<div class="dia"><b>' + dia + '</b><span>' + mes + '</span></div>' +
+        '<div class="corpo"><h3>' + it.m.txt + '</h3></div></div></div>';
+      return;
+    }
+
+    var a = it.a;
+    var ehProx = prox && prox.id === a.id;
+    var cls = (a.av ? 'av ' : '') + (passada ? 'passada ' : '') + (ehProx ? 'hoje' : '');
+    h += '<div class="evento ' + cls + '"><div class="cx ' + cls + '">';
+    h += '<div class="dia"><b>' + dia + '</b><span>' + mes + '</span></div>';
+    h += '<div class="corpo"><h3><a href="aulas/aula-' + ('0' + a.n).slice(-2) + '.html">' +
+      ('0' + a.n).slice(-2) + '. ' + a.tit + '</a></h3>';
+    h += '<div class="meta">' +
+      '<span class="selo ' + ({I:'ciano',II:'',III:'roxo',IV:'verde'}[a.un] || 'cinza') + '">Unidade ' + a.un + '</span>' +
+      '<span class="selo cinza">PUD ' + a.pud + '</span>' +
+      '<span class="selo ' + (a.etapa === 'N2' ? 'ciano' : 'verde') + '">' + a.sem + ' · ' + a.etapa + '</span>' +
+      '<span class="selo ambar">ROD ' + a.rod + ' · peso ' + C.pesosROD[a.rod] + '</span>' +
+      (a.av ? '<span class="selo rosa">★ avaliativa</span>' : '') +
+      (ehProx ? '<span class="selo ambar">próxima aula</span>' : '') +
+      '</div></div></div></div>';
+  });
+  document.getElementById('linha').innerHTML = h;
+
+  document.getElementById('resumo').innerHTML =
+    ['N1', 'N2', 'N3', 'N4'].map(function (e) {
+      var l = C.aulas.filter(function (a) { return a.rod === e; });
+      return '<div class="cartao" style="text-align:center;margin:0;padding:16px">' +
+        '<b style="display:block;font-size:1.7rem;color:var(--azul);line-height:1.1">' + e + '</b>' +
+        '<span class="mudo pequeno" style="font-weight:700">peso ' + C.pesosROD[e] + ' · ' + l.length + ' encontros<br>' +
+        l[0].sem + ' ' + l[0].etapa + '</span></div>';
+    }).join('');
+
+  document.getElementById('rodape').textContent =
+    (CFG.CAMPUS || '') + ' · ' + C.disciplina + ' · ' + (CFG.PROFESSOR || '');
+})();
+</script>
+</body>
+</html>
