@@ -36,8 +36,11 @@
   }
   function salvar() {
     try {
+      var sel = document.getElementById('id-lista');
       localStorage.setItem(CHAVE, JSON.stringify({
-        aluno: valor('id-aluno'), matricula: valor('id-matricula'), turma: valor('id-turma'),
+        alunoIdx: sel ? sel.value : '',
+        alunoNome: (sel && sel.selectedIndex > 0) ? sel.options[sel.selectedIndex].text : '',
+        aluno: valor('id-aluno'), matricula: valor('id-matricula'),
         estado: estado, iniciadoEm: iniciadoEm
       }));
     } catch (e) { /* modo privativo */ }
@@ -537,29 +540,105 @@
   };
 
   /* ------------------------- identificação ------------------------- */
+  var CACHE_TURMA = 'web1:turma';
+
   function painelIdentidade() {
     var d = el('div', 'identidade surge');
-    d.innerHTML = '<h2 style="margin:0 0 4px">👤 Antes de começar</h2>' +
-      '<p class="mudo pequeno" style="margin:0">Preencha seus dados. Sem isso a entrega não é registrada na planilha do professor.</p>';
+    d.innerHTML = '<h2 style="margin:0 0 4px">👤 Quem é você?</h2>' +
+      '<p class="mudo pequeno" style="margin:0">Escolha seu nome na lista. Sem isso a entrega não é registrada na planilha do professor.</p>';
+
     var c = el('div', 'campos');
     c.innerHTML =
-      '<div class="campo"><label for="id-aluno">Nome completo</label><input id="id-aluno" autocomplete="name" placeholder="Seu nome"></div>' +
-      '<div class="campo"><label for="id-matricula">Matrícula</label><input id="id-matricula" placeholder="Ex.: 2026010123"></div>' +
-      '<div class="campo"><label for="id-turma">Turma</label><select id="id-turma">' +
-      (CFG.TURMAS || ['1º ANO A']).map(function (t) { return '<option>' + t + '</option>'; }).join('') +
-      '</select></div>';
+      '<div class="campo" id="campo-lista" style="grid-column:1/-1">' +
+        '<label for="id-lista">Seu nome</label>' +
+        '<select id="id-lista"><option value="">carregando a lista da turma…</option></select>' +
+      '</div>' +
+      '<div class="campo" id="campo-nome" style="display:none">' +
+        '<label for="id-aluno">Nome completo</label>' +
+        '<input id="id-aluno" autocomplete="name" placeholder="Seu nome"></div>' +
+      '<div class="campo" id="campo-mat" style="display:none">' +
+        '<label for="id-matricula">Matrícula</label>' +
+        '<input id="id-matricula" placeholder="só os números"></div>';
     d.appendChild(c);
+    d.appendChild(el('div', 'retorno', ''));
+    setTimeout(function () { carregarTurma(d); }, 0);
     return d;
+  }
+
+  /** Modo manual: quando a lista não carrega, o aluno digita. */
+  function modoManual(d, motivo) {
+    var cl = document.getElementById('campo-lista');
+    if (cl) cl.style.display = 'none';
+    ['campo-nome', 'campo-mat'].forEach(function (id) {
+      var e = document.getElementById(id); if (e) e.style.display = '';
+    });
+    if (motivo) {
+      var r = d.querySelector('.retorno');
+      r.className = 'retorno mostrar meio';
+      r.innerHTML = '<strong>Não consegui carregar a lista da turma.</strong>' +
+        '<div style="margin-top:6px">' + motivo + ' Digite seu nome completo e sua matrícula — ' +
+        'escreva exatamente como estão no sistema, para o professor conseguir identificar a entrega.</div>';
+    }
+  }
+
+  function preencherLista(d, alunos) {
+    var sel = document.getElementById('id-lista');
+    if (!sel) return;
+    sel.innerHTML = '<option value="">— escolha seu nome —</option>' +
+      alunos.map(function (a) {
+        return '<option value="' + a.i + '">' + esc(a.n) + '</option>';
+      }).join('');
+    var guardado = carregar();
+    if (guardado && guardado.alunoIdx !== undefined && guardado.alunoIdx !== null && guardado.alunoIdx !== '') {
+      sel.value = String(guardado.alunoIdx);
+    }
+    sel.addEventListener('change', function () { sel.classList.remove('faltando'); salvar(); });
+  }
+
+  function carregarTurma(d) {
+    var url = CFG.URL_ENVIO;
+    var cache = null;
+    try { cache = JSON.parse(localStorage.getItem(CACHE_TURMA) || 'null'); } catch (e) {}
+
+    if (!url) {
+      if (cache && cache.alunos && cache.alunos.length) { preencherLista(d, cache.alunos); return; }
+      modoManual(d, 'O envio automático ainda não foi configurado pelo professor.');
+      return;
+    }
+
+    fetch(url + (url.indexOf('?') >= 0 ? '&' : '?') + 'acao=turma', { redirect: 'follow' })
+      .then(function (r) { return r.json(); })
+      .then(function (r) {
+        if (!r || !r.ok || !r.alunos || !r.alunos.length) throw new Error('lista vazia');
+        preencherLista(d, r.alunos);
+        try { localStorage.setItem(CACHE_TURMA, JSON.stringify({ em: Date.now(), alunos: r.alunos })); } catch (e) {}
+      })
+      .catch(function () {
+        if (cache && cache.alunos && cache.alunos.length) {
+          preencherLista(d, cache.alunos);
+          var r = d.querySelector('.retorno');
+          r.className = 'retorno mostrar meio';
+          r.innerHTML = 'Usando a lista guardada da última vez — não consegui atualizar agora. ' +
+            'Se o seu nome não estiver aí, avise o professor.';
+          return;
+        }
+        modoManual(d, 'Pode ser a internet ou o bloqueio do navegador.');
+      });
   }
 
   /* ------------------------- entrega ------------------------- */
   function montarPayload() {
     var resp = {};
     M.blocos.forEach(function (b) { if (b.xp) resp[b.id] = estado[b.id] ? estado[b.id].resp : null; });
+    var sel = document.getElementById('id-lista');
+    var usouLista = sel && sel.style.display !== 'none' && sel.value !== '';
     return {
-      versao: 1,
+      versao: 2,
       aula: M.id, titulo: M.titulo, unidade: M.unidade, data: M.data,
-      aluno: valor('id-aluno'), matricula: valor('id-matricula'), turma: valor('id-turma'),
+      alunoIdx: usouLista ? sel.value : '',
+      aluno: usouLista ? sel.options[sel.selectedIndex].text : valor('id-aluno'),
+      matricula: usouLista ? '' : valor('id-matricula'),
+      turma: '',
       xp: xpTotal(), xpMax: xpMax(),
       minutos: Math.round((Date.now() - iniciadoEm) / 60000),
       enviadoEm: new Date().toISOString(),
@@ -598,6 +677,14 @@
   }
 
   function faltaIdentidade() {
+    var lista = document.getElementById('campo-lista');
+    var usandoLista = lista && lista.style.display !== 'none';
+    if (usandoLista) {
+      var sel = document.getElementById('id-lista');
+      var vazio = !sel || !sel.value;
+      if (sel) sel.classList.toggle('faltando', vazio);
+      return vazio;
+    }
     var faltou = false;
     ['id-aluno', 'id-matricula'].forEach(function (id) {
       var e = document.getElementById(id);
@@ -609,7 +696,10 @@
 
   function enviar(bt, painel) {
     if (faltaIdentidade()) {
-      retorno(painel, 'ruim', 'Preencha <strong>nome</strong> e <strong>matrícula</strong> no topo da página antes de enviar.');
+      var lista0 = document.getElementById('campo-lista');
+      retorno(painel, 'ruim', (lista0 && lista0.style.display !== 'none')
+        ? '<strong>Escolha o seu nome</strong> na lista, no topo da página, antes de enviar.'
+        : 'Preencha <strong>nome</strong> e <strong>matrícula</strong> no topo da página antes de enviar.');
       document.querySelector('.identidade').scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
@@ -746,9 +836,10 @@
     // restaurar progresso
     var d = carregar();
     if (d) {
-      if (d.aluno) document.getElementById('id-aluno').value = d.aluno;
-      if (d.matricula) document.getElementById('id-matricula').value = d.matricula;
-      if (d.turma) { var s = document.getElementById('id-turma'); if (s) s.value = d.turma; }
+      var ia = document.getElementById('id-aluno');
+      var im = document.getElementById('id-matricula');
+      if (d.aluno && ia) ia.value = d.aluno;
+      if (d.matricula && im) im.value = d.matricula;
       if (d.estado) {
         estado = d.estado;
         for (var k in estado) {
@@ -759,7 +850,7 @@
         }
       }
     }
-    ['id-aluno', 'id-matricula', 'id-turma'].forEach(function (id) {
+    ['id-aluno', 'id-matricula', 'id-lista'].forEach(function (id) {
       var e = document.getElementById(id); if (e) e.addEventListener('change', salvar);
     });
     atualizarHud();
